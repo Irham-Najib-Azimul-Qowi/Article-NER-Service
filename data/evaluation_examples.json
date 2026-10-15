@@ -1,0 +1,602 @@
+[
+  {
+    "id": "eval_01_sports",
+    "title": "MHC reschedules Deepavali Day matches after public backlash",
+    "body": "The public and clubs expressed annoyance over Malaysian Hockey League (MHL) matches scheduled for Deepavali Day, 8 November. Two matches, Terengganu Hockey Team vs Armed Forces and TNB Thunderbolts vs Maybank, were set. The Malaysian Hockey Confederation confirmed changes.",
+    "full_text": "MHC reschedules Deepavali Day matches after public backlash\n\nThe public and clubs expressed annoyance over Malaysian Hockey League (MHL) matches scheduled for Deepavali Day, 8 November. Two matches, Terengganu Hockey Team vs Armed Forces and TNB Thunderbolts vs Maybank, were set. The Malaysian Hockey Confederation confirmed changes.",
+    "entities": [
+      {
+        "text": "MHC",
+        "label": "ORG",
+        "start": 0,
+        "end": 3
+      },
+      {
+        "text": "Deepavali Day",
+        "label": "EVENT",
+        "start": 16,
+        "end": 29
+      },
+      {
+        "text": "Malaysian Hockey League",
+        "label": "ORG",
+        "start": 107,
+        "end": 130
+      },
+      {
+        "text": "MHL",
+        "label": "ORG",
+        "start": 132,
+        "end": 135
+      },
+      {
+        "text": "Deepavali Day",
+        "label": "DATE",
+        "start": 159,
+        "end": 172
+      },
+      {
+        "text": "8 November",
+        "label": "DATE",
+        "start": 174,
+        "end": 184
+      },
+      {
+        "text": "Terengganu Hockey Team vs Armed Forces",
+        "label": "ORG",
+        "start": 199,
+        "end": 237
+      },
+      {
+        "text": "TNB Thunderbolts",
+        "label": "ORG",
+        "start": 242,
+        "end": 258
+      },
+      {
+        "text": "Maybank",
+        "label": "ORG",
+        "start": 262,
+        "end": 269
+      },
+      {
+        "text": "The Malaysian Hockey Confederation",
+        "label": "ORG",
+        "start": 281,
+        "end": 315
+      }
+    ]
+  },
+  {
+    "id": "eval_02_banking",
+    "title": "Bursa Malaysia dijangka bergerak mendatar minggu ini",
+    "body": "Remisier Maybank Investment Bank, Jeffry Azizi Jaafar berkata, tekanan pasaran datang daripada Rizab Persekutuan (Fed) Amerika Syarikat. Justeru itu, Indeks Komposit Kuala Lumpur (FBM KLCI) dijangka bergerak dalam julat tertentu. Sektor perbankan seperti Malayan Banking Berhad (Maybank), CIMB Group Holdings Berhad, Public Bank Berhad dan RHB Bank Berhad kekal stabil, sementara Bank Negara Malaysia (BNM) memantau kadar faedah.",
+    "full_text": "Bursa Malaysia dijangka bergerak mendatar minggu ini\n\nRemisier Maybank Investment Bank, Jeffry Azizi Jaafar berkata, tekanan pasaran datang daripada Rizab Persekutuan (Fed) Amerika Syarikat. Justeru itu, Indeks Komposit Kuala Lumpur (FBM KLCI) dijangka bergerak dalam julat tertentu. Sektor perbankan seperti Malayan Banking Berhad (Maybank), CIMB Group Holdings Berhad, Public Bank Berhad dan RHB Bank Berhad kekal stabil, sementara Bank Negara Malaysia (BNM) memantau kadar faedah.",
+    "entities": [
+      {
+        "text": "Bursa Malaysia",
+        "label": "ORG",
+        "start": 0,
+        "end": 14
+      },
+      {
+        "text": "Remisier Maybank Investment Bank",
+        "label": "ORG",
+        "start": 54,
+        "end": 86
+      },
+      {
+        "text": "Jeffry Azizi Jaafar",
+        "label": "PERSON",
+        "start": 88,
+        "end": 107
+      },
+      {
+        "text": "tekanan",
+        "label": "PERSON",
+        "start": 117,
+        "end": 124
+      },
+      {
+        "text": "Rizab Persekutuan",
+        "label": "PERSON",
+        "start": 149,
+        "end": 166
+      },
+      {
+        "text": "Fed",
+        "label": "ORG",
+        "start": 168,
+        "end": 171
+      },
+      {
+        "text": "Amerika Syarikat",
+        "label": "PERSON",
+        "start": 173,
+        "end": 189
+      },
+      {
+        "text": "Indeks Komposit",
+        "label": "PERSON",
+        "start": 204,
+        "end": 219
+      },
+      {
+        "text": "Kuala Lumpur",
+        "label": "GPE",
+        "start": 220,
+        "end": 232
+      },
+      {
+        "text": "FBM KLCI",
+        "label": "ORG",
+        "start": 234,
+        "end": 242
+      },
+      {
+        "text": "perbankan",
+        "label": "PERSON",
+        "start": 291,
+        "end": 300
+      },
+      {
+        "text": "Malayan Banking Berhad",
+        "label": "ORG",
+        "start": 309,
+        "end": 331
+      },
+      {
+        "text": "Maybank",
+        "label": "ORG",
+        "start": 333,
+        "end": 340
+      },
+      {
+        "text": "CIMB Group Holdings Berhad",
+        "label": "ORG",
+        "start": 343,
+        "end": 369
+      },
+      {
+        "text": "Public Bank Berhad",
+        "label": "ORG",
+        "start": 371,
+        "end": 389
+      },
+      {
+        "text": "RHB Bank Berhad",
+        "label": "ORG",
+        "start": 394,
+        "end": 409
+      },
+      {
+        "text": "Bank Negara Malaysia",
+        "label": "ORG",
+        "start": 434,
+        "end": 454
+      },
+      {
+        "text": "BNM",
+        "label": "ORG",
+        "start": 456,
+        "end": 459
+      },
+      {
+        "text": "memantau kadar",
+        "label": "PERSON",
+        "start": 461,
+        "end": 475
+      }
+    ]
+  },
+  {
+    "id": "eval_03_ai_oversight",
+    "title": "AG Cautions on Use of AI, Effective Human Oversight Is Still Essential",
+    "body": "Attorney General Tan Sri Mohd Dusuki Mokhtar cautioned for human oversight in AI at the Financial Lines Forum in Kuala Lumpur. Also present were Lembaga Tabung Haji chairman and RHB Bank founder Tan Sri Abdul Rashid Hussin on 15 October.",
+    "full_text": "AG Cautions on Use of AI, Effective Human Oversight Is Still Essential\n\nAttorney General Tan Sri Mohd Dusuki Mokhtar cautioned for human oversight in AI at the Financial Lines Forum in Kuala Lumpur. Also present were Lembaga Tabung Haji chairman and RHB Bank founder Tan Sri Abdul Rashid Hussin on 15 October.",
+    "entities": [
+      {
+        "text": "AG Cautions",
+        "label": "ORG",
+        "start": 0,
+        "end": 11
+      },
+      {
+        "text": "AI",
+        "label": "GPE",
+        "start": 22,
+        "end": 24
+      },
+      {
+        "text": "Tan Sri Mohd Dusuki Mokhtar",
+        "label": "PERSON",
+        "start": 89,
+        "end": 116
+      },
+      {
+        "text": "AI",
+        "label": "GPE",
+        "start": 150,
+        "end": 152
+      },
+      {
+        "text": "the Financial Lines Forum",
+        "label": "ORG",
+        "start": 156,
+        "end": 181
+      },
+      {
+        "text": "Kuala Lumpur",
+        "label": "GPE",
+        "start": 185,
+        "end": 197
+      },
+      {
+        "text": "Lembaga Tabung Haji",
+        "label": "PERSON",
+        "start": 217,
+        "end": 236
+      },
+      {
+        "text": "RHB Bank",
+        "label": "ORG",
+        "start": 250,
+        "end": 258
+      },
+      {
+        "text": "Tan Sri Abdul Rashid Hussin",
+        "label": "PERSON",
+        "start": 267,
+        "end": 294
+      },
+      {
+        "text": "15 October",
+        "label": "DATE",
+        "start": 298,
+        "end": 308
+      }
+    ]
+  },
+  {
+    "id": "eval_04_port_expansion",
+    "title": "Transport Minister clarifies port expansion at Carey Island",
+    "body": "Transport Minister Anthony Loke clarifies that proposed new port terminals at Carey Island and Port Dickson will not compete with Port of Tanjung Pelepas.",
+    "full_text": "Transport Minister clarifies port expansion at Carey Island\n\nTransport Minister Anthony Loke clarifies that proposed new port terminals at Carey Island and Port Dickson will not compete with Port of Tanjung Pelepas.",
+    "entities": [
+      {
+        "text": "Carey Island",
+        "label": "LOC",
+        "start": 47,
+        "end": 59
+      },
+      {
+        "text": "Anthony Loke",
+        "label": "PERSON",
+        "start": 80,
+        "end": 92
+      },
+      {
+        "text": "Carey Island",
+        "label": "LOC",
+        "start": 139,
+        "end": 151
+      },
+      {
+        "text": "Port Dickson",
+        "label": "GPE",
+        "start": 156,
+        "end": 168
+      },
+      {
+        "text": "Port of Tanjung Pelepas",
+        "label": "LOC",
+        "start": 191,
+        "end": 214
+      }
+    ]
+  },
+  {
+    "id": "eval_05_education_loans",
+    "title": "PTPTN loan repayments hit record for borrowers",
+    "body": "PTPTN outstanding loan repayments hit RM10.7 billion in October 2026. The government introduces new measures in Putrajaya to ensure fund sustainability.",
+    "full_text": "PTPTN loan repayments hit record for borrowers\n\nPTPTN outstanding loan repayments hit RM10.7 billion in October 2026. The government introduces new measures in Putrajaya to ensure fund sustainability.",
+    "entities": [
+      {
+        "text": "PTPTN",
+        "label": "ORG",
+        "start": 0,
+        "end": 5
+      },
+      {
+        "text": "PTPTN",
+        "label": "ORG",
+        "start": 48,
+        "end": 53
+      },
+      {
+        "text": "RM10.7 billion",
+        "label": "MONEY",
+        "start": 86,
+        "end": 100
+      },
+      {
+        "text": "October 2026",
+        "label": "DATE",
+        "start": 104,
+        "end": 116
+      },
+      {
+        "text": "Putrajaya",
+        "label": "GPE",
+        "start": 160,
+        "end": 169
+      }
+    ]
+  },
+  {
+    "id": "eval_06_royal_military",
+    "title": "King confers armed forces gallantry awards on 150 recipients",
+    "body": "King Sultan Ibrahim conferred gallantry awards in Kuala Lumpur to military chiefs across Southeast Asia on 21 September.",
+    "full_text": "King confers armed forces gallantry awards on 150 recipients\n\nKing Sultan Ibrahim conferred gallantry awards in Kuala Lumpur to military chiefs across Southeast Asia on 21 September.",
+    "entities": [
+      {
+        "text": "Sultan Ibrahim",
+        "label": "PERSON",
+        "start": 67,
+        "end": 81
+      },
+      {
+        "text": "Kuala Lumpur",
+        "label": "GPE",
+        "start": 112,
+        "end": 124
+      },
+      {
+        "text": "Southeast Asia",
+        "label": "LOC",
+        "start": 151,
+        "end": 165
+      },
+      {
+        "text": "21 September",
+        "label": "DATE",
+        "start": 169,
+        "end": 181
+      }
+    ]
+  },
+  {
+    "id": "eval_07_repeated_entities",
+    "title": "Maybank expands digital financing solutions across Southeast Asia",
+    "body": "Maybank has announced that Maybank Islamic and Maybank Investment Bank will introduce unified platforms. Maybank CEO praised the initiative in Kuala Lumpur.",
+    "full_text": "Maybank expands digital financing solutions across Southeast Asia\n\nMaybank has announced that Maybank Islamic and Maybank Investment Bank will introduce unified platforms. Maybank CEO praised the initiative in Kuala Lumpur.",
+    "entities": [
+      {
+        "text": "Maybank",
+        "label": "ORG",
+        "start": 0,
+        "end": 7
+      },
+      {
+        "text": "Southeast Asia",
+        "label": "LOC",
+        "start": 51,
+        "end": 65
+      },
+      {
+        "text": "Maybank",
+        "label": "ORG",
+        "start": 67,
+        "end": 74
+      },
+      {
+        "text": "Maybank Islamic",
+        "label": "ORG",
+        "start": 94,
+        "end": 109
+      },
+      {
+        "text": "Maybank Investment Bank",
+        "label": "ORG",
+        "start": 114,
+        "end": 137
+      },
+      {
+        "text": "Maybank",
+        "label": "ORG",
+        "start": 172,
+        "end": 179
+      },
+      {
+        "text": "Kuala Lumpur",
+        "label": "GPE",
+        "start": 210,
+        "end": 222
+      }
+    ]
+  },
+  {
+    "id": "eval_08_ambiguous_names",
+    "title": "UOB Malaysia and RHB Banking execute landmark transaction",
+    "body": "In Petaling Jaya, UOB Malaysia and RHB Banking Group concluded negotiations today with Bank Negara Malaysia representatives.",
+    "full_text": "UOB Malaysia and RHB Banking execute landmark transaction\n\nIn Petaling Jaya, UOB Malaysia and RHB Banking Group concluded negotiations today with Bank Negara Malaysia representatives.",
+    "entities": [
+      {
+        "text": "Malaysia",
+        "label": "GPE",
+        "start": 4,
+        "end": 12
+      },
+      {
+        "text": "RHB Banking",
+        "label": "ORG",
+        "start": 17,
+        "end": 28
+      },
+      {
+        "text": "Petaling Jaya",
+        "label": "GPE",
+        "start": 62,
+        "end": 75
+      },
+      {
+        "text": "Malaysia",
+        "label": "GPE",
+        "start": 81,
+        "end": 89
+      },
+      {
+        "text": "RHB Banking Group",
+        "label": "ORG",
+        "start": 94,
+        "end": 111
+      },
+      {
+        "text": "today",
+        "label": "DATE",
+        "start": 135,
+        "end": 140
+      },
+      {
+        "text": "Bank Negara Malaysia",
+        "label": "ORG",
+        "start": 146,
+        "end": 166
+      }
+    ]
+  },
+  {
+    "id": "eval_09_challenging_mixed",
+    "title": "EU-Malaysia trade dialogue resumes in Putrajaya",
+    "body": "Officials from the European Union met representatives from Malaysia in Putrajaya. The talks covered RM400 million in regional agricultural commitments.",
+    "full_text": "EU-Malaysia trade dialogue resumes in Putrajaya\n\nOfficials from the European Union met representatives from Malaysia in Putrajaya. The talks covered RM400 million in regional agricultural commitments.",
+    "entities": [
+      {
+        "text": "EU",
+        "label": "ORG",
+        "start": 0,
+        "end": 2
+      },
+      {
+        "text": "Malaysia",
+        "label": "GPE",
+        "start": 3,
+        "end": 11
+      },
+      {
+        "text": "Putrajaya",
+        "label": "GPE",
+        "start": 38,
+        "end": 47
+      },
+      {
+        "text": "the European Union",
+        "label": "ORG",
+        "start": 64,
+        "end": 82
+      },
+      {
+        "text": "Malaysia",
+        "label": "GPE",
+        "start": 108,
+        "end": 116
+      },
+      {
+        "text": "Putrajaya",
+        "label": "GPE",
+        "start": 120,
+        "end": 129
+      },
+      {
+        "text": "RM400 million",
+        "label": "MONEY",
+        "start": 149,
+        "end": 162
+      }
+    ]
+  },
+  {
+    "id": "eval_10_empty_entities_1",
+    "title": "General Reflections on Modern Literature and Art",
+    "body": "It is always interesting how artistic philosophy evolves throughout the centuries without single entity control.",
+    "full_text": "General Reflections on Modern Literature and Art\n\nIt is always interesting how artistic philosophy evolves throughout the centuries without single entity control.",
+    "entities": [
+      {
+        "text": "General Reflections on Modern Literature and",
+        "label": "ORG",
+        "start": 0,
+        "end": 44
+      },
+      {
+        "text": "the centuries",
+        "label": "DATE",
+        "start": 118,
+        "end": 131
+      }
+    ]
+  },
+  {
+    "id": "eval_11_empty_entities_2",
+    "title": "Abstract Concepts in Modern Theoretical Aesthetics",
+    "body": "Creativity and contemplation intertwine in quiet harmony whenever profound stillness emerges within reflective contemplation.",
+    "full_text": "Abstract Concepts in Modern Theoretical Aesthetics\n\nCreativity and contemplation intertwine in quiet harmony whenever profound stillness emerges within reflective contemplation.",
+    "entities": [
+      {
+        "text": "Modern Theoretical Aesthetics\n\nCreativity",
+        "label": "ORG",
+        "start": 21,
+        "end": 62
+      }
+    ]
+  },
+  {
+    "id": "eval_12_challenging_dates_acronyms",
+    "title": "FBM KLCI gains momentum amid regional economic optimism",
+    "body": "On 14 November and 15 November, Bursa Malaysia saw heavy trading led by CIMB and Maybank, exceeding RM2.5 billion in turnover in Kuala Lumpur.",
+    "full_text": "FBM KLCI gains momentum amid regional economic optimism\n\nOn 14 November and 15 November, Bursa Malaysia saw heavy trading led by CIMB and Maybank, exceeding RM2.5 billion in turnover in Kuala Lumpur.",
+    "entities": [
+      {
+        "text": "FBM KLCI",
+        "label": "ORG",
+        "start": 0,
+        "end": 8
+      },
+      {
+        "text": "14 November and 15 November",
+        "label": "DATE",
+        "start": 60,
+        "end": 87
+      },
+      {
+        "text": "Bursa Malaysia",
+        "label": "ORG",
+        "start": 89,
+        "end": 103
+      },
+      {
+        "text": "CIMB",
+        "label": "ORG",
+        "start": 129,
+        "end": 133
+      },
+      {
+        "text": "Maybank",
+        "label": "ORG",
+        "start": 138,
+        "end": 145
+      },
+      {
+        "text": "RM2.5 billion",
+        "label": "MONEY",
+        "start": 157,
+        "end": 170
+      },
+      {
+        "text": "Kuala Lumpur",
+        "label": "GPE",
+        "start": 186,
+        "end": 198
+      }
+    ]
+  }
+]
