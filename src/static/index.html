@@ -1,207 +1,75 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Article Named-Entity Recognition (NER) Service</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ekstraksi Entitas Berita</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="layout-wrapper">
-    <!-- Navbar Header -->
-    <header class="navbar">
-      <div class="brand-group">
-        <div class="brand-logo">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
+  <header class="topbar">
+    <h1>Ekstraksi Entitas Berita</h1>
+    <p class="server" id="server-status" aria-live="polite">Memeriksa server…</p>
+  </header>
+
+  <main class="layout">
+    <section class="panel" aria-labelledby="input-heading">
+      <h2 id="input-heading">Artikel</h2>
+
+      <div class="samples">
+        <span class="hint">Isi dengan contoh:</span>
+        <button type="button" class="link" data-sample="hockey">Berita hoki</button>
+        <button type="button" class="link" data-sample="bank">Berita bank</button>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="title">Judul</label>
+          <span class="count" id="title-count">0 / 500</span>
         </div>
-        <div>
-          <h1>Article Named-Entity Recognition</h1>
-          <p class="tagline">News-Monitoring Automated Entity Extraction & Intelligence Platform</p>
+        <input id="title" type="text" maxlength="500" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="body">Isi berita</label>
+          <span class="count" id="body-count">0 karakter</span>
+        </div>
+        <textarea id="body" rows="12"></textarea>
+      </div>
+
+      <p class="error" id="error" role="alert" hidden></p>
+
+      <div class="actions">
+        <button type="button" class="primary" id="analyze">Cari entitas</button>
+        <button type="button" class="secondary" id="clear">Kosongkan</button>
+        <span class="hint">Ctrl + Enter untuk menjalankan</span>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="result-heading">
+      <h2 id="result-heading">Hasil</h2>
+
+      <p class="empty" id="empty">Hasil akan tampil di sini setelah artikel dianalisis.</p>
+
+      <div id="result" hidden>
+        <p class="summary" id="summary"></p>
+        <div class="chips" id="chips" role="group" aria-label="Filter kategori"></div>
+        <p class="note" id="note" hidden></p>
+        <div class="reading" id="text" tabindex="0" aria-label="Teks artikel dengan entitas disorot"></div>
+
+        <h3>Daftar entitas</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Teks</th><th scope="col">Kategori</th><th scope="col">Posisi</th></tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
         </div>
       </div>
-      <div class="nav-right">
-        <div class="status-pill" id="system-status">
-          <span class="dot pulse"></span>
-          <span id="status-text">Menghubungkan...</span>
-        </div>
-      </div>
-    </header>
-
-    <main class="grid-main">
-      <!-- Left Column: Input Card -->
-      <section class="card input-card">
-        <div class="card-head">
-          <div class="card-title-group">
-            <h2>Input Artikel Berita</h2>
-            <p class="card-subtitle">Masukkan judul dan isi badan berita untuk diekstraksi entitasnya.</p>
-          </div>
-          <div class="sample-picker">
-            <label for="sample-select" class="sr-only">Pilih Contoh</label>
-            <select id="sample-select" class="select-dropdown">
-              <option value="" disabled selected>Pilih Contoh Berita...</option>
-              <option value="sample_sports">1. Berita Olahraga (MHL & Deepavali)</option>
-              <option value="sample_banking">2. Berita Perbankan (Maybank & BNM)</option>
-              <option value="sample_govt">3. Berita Regulasi AI & Kejaksaan</option>
-              <option value="sample_empty">4. Artikel Tanpa Entitas (Filosofi Seni)</option>
-            </select>
-          </div>
-        </div>
-
-        <form id="ner-form">
-          <div class="form-group">
-            <div class="label-row">
-              <label for="title">Judul Berita (Title) <span class="required">*</span></label>
-              <span class="char-counter" id="title-counter">0 / 500</span>
-            </div>
-            <input 
-              type="text" 
-              id="title" 
-              name="title" 
-              placeholder="Contoh: MHC reschedules Deepavali Day matches after public backlash..." 
-              autocomplete="off" 
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <div class="label-row">
-              <label for="body">Isi Teks Berita (Body) <span class="required">*</span></label>
-              <span class="char-counter" id="body-counter">0 / 50,000</span>
-            </div>
-            <textarea 
-              id="body" 
-              name="body" 
-              rows="12" 
-              placeholder="Salin teks artikel berita daring lengkap di sini..." 
-              required
-            ></textarea>
-          </div>
-
-          <div class="action-buttons">
-            <button type="submit" id="btn-submit" class="btn btn-primary">
-              <span id="spinner" class="spinner hidden"></span>
-              <svg id="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              <span id="btn-label">Ekstrak Entitas</span>
-            </button>
-            <button type="button" id="btn-reset" class="btn btn-ghost">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                <path d="M3 3v5h5"></path>
-              </svg>
-              <span>Reset</span>
-            </button>
-          </div>
-        </form>
-
-        <div id="error-box" class="alert error hidden">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          <div id="error-message"></div>
-        </div>
-      </section>
-
-      <!-- Right Column: Results Card -->
-      <section class="card results-card">
-        <div class="card-head">
-          <div class="card-title-group">
-            <h2>Hasil Analisis Entitas</h2>
-            <p class="card-subtitle">Entitas dan karakter offset terdeteksi pada teks gabungan.</p>
-          </div>
-          <div id="meta-badges" class="badges hidden">
-            <span class="badge badge-count" id="badge-count">0 Entitas</span>
-            <span class="badge badge-model" id="badge-model">Model: -</span>
-            <span class="badge badge-chars" id="badge-chars">0 Karakter</span>
-          </div>
-        </div>
-
-        <!-- Empty State -->
-        <div id="empty-state" class="empty-state">
-          <div class="empty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              <line x1="11" y1="8" x2="11" y2="14"></line>
-              <line x1="8" y1="11" x2="14" y2="11"></line>
-            </svg>
-          </div>
-          <h3>Belum Ada Artikel yang Dianalisis</h3>
-          <p>Masukkan judul dan teks artikel berita di sebelah kiri, atau pilih salah satu contoh berita siap uji untuk memulai ekstraksi.</p>
-        </div>
-
-        <!-- Entity Category Filter Bar -->
-        <div id="filter-wrapper" class="filter-wrapper hidden">
-          <span class="filter-label">Filter Label:</span>
-          <div class="filter-chips" id="filter-chips">
-            <button class="chip active" data-filter="ALL">SEMUA</button>
-            <button class="chip" data-filter="PERSON">PERSON</button>
-            <button class="chip" data-filter="ORG">ORG</button>
-            <button class="chip" data-filter="GPE">GPE</button>
-            <button class="chip" data-filter="LOC">LOC</button>
-            <button class="chip" data-filter="DATE">DATE</button>
-            <button class="chip" data-filter="EVENT">EVENT</button>
-            <button class="chip" data-filter="NORP">NORP</button>
-            <button class="chip" data-filter="MONEY">MONEY</button>
-          </div>
-        </div>
-
-        <!-- In-text Highlight Box -->
-        <div id="highlight-wrapper" class="highlight-wrapper hidden">
-          <div class="section-title-bar">
-            <h3>Visualisasi Sorotan Entitas Teks (Deterministic Offset)</h3>
-            <span class="legend-hint">Sorot teks menunjukkan posisi start/end persis</span>
-          </div>
-          <div id="highlight-box" class="highlight-box"></div>
-        </div>
-
-        <!-- Entities Data Table -->
-        <div id="table-wrapper" class="table-wrapper hidden">
-          <div class="section-title-bar">
-            <h3>Tabel Entitas & Offset Karakter</h3>
-            <span class="legend-hint" id="table-count-label">Menampilkan semua entitas</span>
-          </div>
-          <div class="table-scroll">
-            <table class="entity-table">
-              <thead>
-                <tr>
-                  <th style="width: 38%;">Entitas Teks</th>
-                  <th style="width: 26%;">Kategori (Label)</th>
-                  <th style="width: 18%;">Start Offset</th>
-                  <th style="width: 18%;">End Offset</th>
-                </tr>
-              </thead>
-              <tbody id="table-body"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Raw JSON Toggle Accordion -->
-        <div id="json-wrapper" class="json-wrapper hidden">
-          <details class="json-details">
-            <summary class="json-summary">Lihat Raw JSON Response (API Output)</summary>
-            <pre id="json-code" class="json-code"></pre>
-          </details>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <p>Article Named-Entity Recognition Service • Dirancang untuk Evaluasi News-Monitoring • Mendukung spaCy v3 Fine-Tuned & Fallback Models</p>
-    </footer>
-  </div>
+    </section>
+  </main>
 
   <script src="/static/app.js"></script>
 </body>

@@ -1,306 +1,291 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // DOM Elements
-  const form = document.getElementById("ner-form");
-  const titleIn = document.getElementById("title");
-  const bodyIn = document.getElementById("body");
-  const titleCounter = document.getElementById("title-counter");
-  const bodyCounter = document.getElementById("body-counter");
-  const sampleSelect = document.getElementById("sample-select");
-
-  const btnSubmit = document.getElementById("btn-submit");
-  const btnLabel = document.getElementById("btn-label");
-  const btnIcon = document.getElementById("btn-icon");
-  const spinner = document.getElementById("spinner");
-  const btnReset = document.getElementById("btn-reset");
-
-  const errorBox = document.getElementById("error-box");
-  const errorMessage = document.getElementById("error-message");
-  const systemStatus = document.getElementById("system-status");
-  const statusText = document.getElementById("status-text");
-
-  const emptyState = document.getElementById("empty-state");
-  const metaBadges = document.getElementById("meta-badges");
-  const badgeCount = document.getElementById("badge-count");
-  const badgeModel = document.getElementById("badge-model");
-  const badgeChars = document.getElementById("badge-chars");
-
-  const filterWrapper = document.getElementById("filter-wrapper");
-  const filterChips = document.getElementById("filter-chips");
-  const highlightWrapper = document.getElementById("highlight-wrapper");
-  const highlightBox = document.getElementById("highlight-box");
-  const tableWrapper = document.getElementById("table-wrapper");
-  const tableBody = document.getElementById("table-body");
-  const tableCountLabel = document.getElementById("table-count-label");
-  const jsonWrapper = document.getElementById("json-wrapper");
-  const jsonCode = document.getElementById("json-code");
-
-  // State
-  let currentEntities = [];
-  let currentFullText = "";
-  let activeFilter = "ALL";
-
-  // Pre-configured Sample Articles based on Malaysia News Dataset
-  const sampleArticles = {
-    sample_sports: {
-      title: "MHC reschedules Deepavali Day matches after public backlash",
-      body: "The public and clubs expressed annoyance over Malaysian Hockey League (MHL) matches scheduled for Deepavali Day, 8 November. Two matches, Terengganu Hockey Team vs Armed Forces and TNB Thunderbolts vs Maybank, were originally set for 8 November. The Malaysian Hockey Confederation confirmed these matches would be rescheduled to 9 November and 14 November, respectively."
-    },
-    sample_banking: {
-      title: "Bursa Malaysia dijangka bergerak mendatar minggu ini",
-      body: "Remisier Maybank Investment Bank, Jeffry Azizi Jaafar berkata, tekanan pasaran datang daripada Rizab Persekutuan (Fed) Amerika Syarikat. Justeru itu, Indeks Komposit Kuala Lumpur (FBM KLCI) dijangka bergerak dalam julat tertentu. Sektor perbankan seperti Malayan Banking Berhad (Maybank), CIMB Group Holdings Berhad, Public Bank Berhad dan RHB Bank Berhad kekal stabil, sementara Bank Negara Malaysia (BNM) memantau kadar faedah."
-    },
-    sample_govt: {
-      title: "AG Cautions on Use of AI, Effective Human Oversight Is Still Essential",
-      body: "Attorney General Tan Sri Mohd Dusuki Mokhtar cautioned for human oversight in AI at the Financial Lines Forum in Kuala Lumpur. Also present were Lembaga Tabung Haji chairman and RHB Bank founder Tan Sri Abdul Rashid Hussin on 15 October."
-    },
-    sample_empty: {
-      title: "General Reflections on Modern Literature and Art",
-      body: "It is always fascinating how artistic philosophy evolves throughout the centuries across various aesthetic schools without centralized control or single authority guidance."
-    }
+(() => {
+  const LABEL_NAMES = {
+    PERSON: "Orang",
+    ORG: "Organisasi",
+    GPE: "Negara / kota",
+    LOC: "Lokasi",
+    DATE: "Tanggal",
+    EVENT: "Peristiwa",
+    NORP: "Kelompok",
+    MONEY: "Uang",
   };
 
-  // Health check on startup
-  async function checkHealth() {
+  const TITLE_MIN = 3;
+  const TITLE_MAX = 500;
+  const BODY_MIN = 10;
+
+  const SAMPLES = {
+    hockey: {
+      title: "MHC reschedules Deepavali Day matches after public backlash",
+      body:
+        "The public and clubs expressed annoyance over Malaysian Hockey League (MHL) matches scheduled for Deepavali Day, 8 November. " +
+        "Two matches, Terengganu Hockey Team vs Armed Forces and TNB Thunderbolts vs Maybank, were set. " +
+        "The Malaysian Hockey Confederation confirmed changes.",
+    },
+    bank: {
+      title: "RHB Bank opens new branch in Kuching",
+      body:
+        "RHB Bank opened a new branch in Kuching on 12 October, with a RM2 million investment in the Sarawak market. " +
+        "Chief executive Mohd Rashid said the branch will serve small businesses in the city.",
+    },
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const els = {
+    title: $("title"),
+    body: $("body"),
+    titleCount: $("title-count"),
+    bodyCount: $("body-count"),
+    error: $("error"),
+    analyze: $("analyze"),
+    clear: $("clear"),
+    empty: $("empty"),
+    result: $("result"),
+    summary: $("summary"),
+    chips: $("chips"),
+    note: $("note"),
+    text: $("text"),
+    rows: $("rows"),
+    server: $("server-status"),
+  };
+
+  const state = { fullText: "", entities: [], active: new Set() };
+
+  /* ---------- Status server ---------- */
+
+  async function checkServer() {
     try {
       const res = await fetch("/health");
-      if (res.ok) {
-        const data = await res.json();
-        systemStatus.classList.add("online");
-        statusText.textContent = `Online (${data.model || "Aktif"})`;
-      } else {
-        statusText.textContent = "Server Error";
-      }
+      if (!res.ok) throw new Error();
+      const data = await res.json().catch(() => ({}));
+      const model = [data.model, data.model_name, data.model_loaded].find((v) => typeof v === "string");
+      els.server.textContent = model ? `Server aktif · ${model}` : "Server aktif";
+      els.server.className = "server ok";
     } catch {
-      statusText.textContent = "Offline";
+      els.server.textContent = "Server tidak terjangkau";
+      els.server.className = "server down";
     }
   }
-  checkHealth();
 
-  // Character counter updates
-  function updateCounters() {
-    titleCounter.textContent = `${titleIn.value.length} / 500`;
-    bodyCounter.textContent = `${bodyIn.value.length.toLocaleString()} / 50,000`;
+  /* ---------- Input ---------- */
+
+  function updateCounts() {
+    els.titleCount.textContent = `${els.title.value.length} / ${TITLE_MAX}`;
+    els.bodyCount.textContent = `${els.body.value.length} karakter`;
   }
-  titleIn.addEventListener("input", updateCounters);
-  bodyIn.addEventListener("input", updateCounters);
 
-  // Sample picker handler
-  sampleSelect.addEventListener("change", (e) => {
-    const key = e.target.value;
-    if (sampleArticles[key]) {
-      titleIn.value = sampleArticles[key].title;
-      bodyIn.value = sampleArticles[key].body;
-      updateCounters();
-      clearError();
+  function showError(message) {
+    els.error.textContent = message;
+    els.error.hidden = !message;
+  }
+
+  function loadSample(key) {
+    const sample = SAMPLES[key];
+    if (!sample) return;
+    els.title.value = sample.title;
+    els.body.value = sample.body;
+    showError("");
+    updateCounts();
+  }
+
+  function clearAll() {
+    els.title.value = "";
+    els.body.value = "";
+    showError("");
+    updateCounts();
+    els.result.hidden = true;
+    els.empty.hidden = false;
+    els.title.focus();
+  }
+
+  function validate(title, body) {
+    if (title.length < TITLE_MIN) return `Judul minimal ${TITLE_MIN} karakter.`;
+    if (title.length > TITLE_MAX) return `Judul maksimal ${TITLE_MAX} karakter.`;
+    if (body.length < BODY_MIN) return `Isi berita minimal ${BODY_MIN} karakter.`;
+    return "";
+  }
+
+  function readError(data, status) {
+    const detail = data && (data.detail || data.error || data.message);
+    if (typeof detail === "string") return detail;
+    if (Array.isArray(detail)) {
+      return detail.map((d) => d.msg || JSON.stringify(d)).join("; ");
     }
-  });
-
-  // Reset handler
-  btnReset.addEventListener("click", () => {
-    form.reset();
-    sampleSelect.value = "";
-    updateCounters();
-    resetResultsView();
-    clearError();
-  });
-
-  function showError(msg) {
-    errorMessage.textContent = msg;
-    errorBox.classList.remove("hidden");
+    return `Server mengembalikan status ${status}.`;
   }
 
-  function clearError() {
-    errorMessage.textContent = "";
-    errorBox.classList.add("hidden");
-  }
+  /* ---------- Analisis ---------- */
 
-  function resetResultsView() {
-    emptyState.classList.remove("hidden");
-    metaBadges.classList.add("hidden");
-    filterWrapper.classList.add("hidden");
-    highlightWrapper.classList.add("hidden");
-    tableWrapper.classList.add("hidden");
-    jsonWrapper.classList.add("hidden");
-    tableBody.innerHTML = "";
-    highlightBox.innerHTML = "";
-    jsonCode.textContent = "";
-    currentEntities = [];
-    currentFullText = "";
-    activeFilter = "ALL";
-    resetFilterChips();
-  }
+  async function analyze() {
+    const title = els.title.value.trim();
+    const body = els.body.value.trim();
 
-  function resetFilterChips() {
-    document.querySelectorAll(".chip").forEach(chip => {
-      if (chip.getAttribute("data-filter") === "ALL") {
-        chip.classList.add("active");
-      } else {
-        chip.classList.remove("active");
-      }
-    });
-  }
-
-  // Filter chips click handling
-  filterChips.addEventListener("click", (e) => {
-    const chip = e.target.closest(".chip");
-    if (!chip) return;
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    chip.classList.add("active");
-    activeFilter = chip.getAttribute("data-filter");
-    applyFilter();
-  });
-
-  function applyFilter() {
-    renderTable();
-    renderHighlights();
-  }
-
-  // Form submission
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    clearError();
-
-    const title = titleIn.value.trim();
-    const body = bodyIn.value.trim();
-
-    // Client-side quick checks
-    if (!title || !body) {
-      showError("Harap isi kedua kolom judul dan teks artikel berita.");
+    const problem = validate(title, body);
+    if (problem) {
+      showError(problem);
       return;
     }
-    if (title.length < 3) {
-      showError("Judul artikel minimal terdiri dari 3 karakter.");
-      return;
-    }
-    if (body.length < 10) {
-      showError("Isi artikel minimal terdiri dari 10 karakter.");
-      return;
-    }
+    showError("");
 
-    // Set loading state
-    btnSubmit.disabled = true;
-    spinner.classList.remove("hidden");
-    btnIcon.classList.add("hidden");
-    btnLabel.textContent = "Mengekstrak...";
+    els.analyze.disabled = true;
+    els.analyze.textContent = "Menganalisis…";
 
     try {
       const res = await fetch("/extract-entities", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, body })
+        body: JSON.stringify({ title, body }),
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.detail || "Gagal memproses ekstraksi entitas.");
-      }
-
-      currentEntities = data.entities || [];
-      currentFullText = `${title}\n\n${body}`;
-
-      displayResults(data);
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(readError(data, res.status));
+      showResult(title, body, data);
     } catch (err) {
-      showError(err.message);
-      resetResultsView();
+      const offline = err instanceof TypeError;
+      showError(offline ? "Tidak bisa menghubungi server. Pastikan uvicorn sedang berjalan." : err.message);
     } finally {
-      btnSubmit.disabled = false;
-      spinner.classList.add("hidden");
-      btnIcon.classList.remove("hidden");
-      btnLabel.textContent = "Ekstrak Entitas";
+      els.analyze.disabled = false;
+      els.analyze.textContent = "Cari entitas";
     }
+  }
+
+  // Server menghitung posisi dari "judul\n\nisi". Pilih versi teks yang cocok dengan semua posisi.
+  function pickFullText(title, body, entities) {
+    const candidates = [`${title}\n\n${body}`, `${els.title.value}\n\n${els.body.value}`];
+    let best = candidates[0];
+    let bestScore = -1;
+    for (const text of candidates) {
+      const score = entities.filter((e) => text.slice(e.start, e.end) === e.text).length;
+      if (score > bestScore) {
+        best = text;
+        bestScore = score;
+      }
+    }
+    return best;
+  }
+
+  function showResult(title, body, data) {
+    const raw = Array.isArray(data && data.entities) ? data.entities : [];
+    const fullText = pickFullText(title, body, raw);
+
+    const entities = raw
+      .map((e) => ({ ...e, valid: fullText.slice(e.start, e.end) === e.text }))
+      .sort((a, b) => a.start - b.start || b.end - a.end);
+
+    state.fullText = fullText;
+    state.entities = entities;
+    state.active = new Set(entities.map((e) => e.label));
+
+    const skipped = entities.filter((e) => !e.valid).length;
+    els.note.hidden = skipped === 0;
+    els.note.textContent = skipped ? `${skipped} entitas tidak disorot karena posisinya tidak cocok dengan teks.` : "";
+
+    els.empty.hidden = true;
+    els.result.hidden = false;
+
+    renderChips();
+    renderText();
+    renderRows();
+  }
+
+  /* ---------- Tampilan hasil ---------- */
+
+  function labelName(label) {
+    return LABEL_NAMES[label] || label;
+  }
+
+  function renderChips() {
+    els.chips.replaceChildren();
+    const counts = new Map();
+    for (const e of state.entities) counts.set(e.label, (counts.get(e.label) || 0) + 1);
+
+    els.summary.textContent = state.entities.length
+      ? `${state.entities.length} entitas ditemukan dalam ${state.fullText.length} karakter.`
+      : "Tidak ada entitas yang ditemukan di artikel ini.";
+
+    for (const [label, count] of counts) {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.dataset.label = label;
+      chip.setAttribute("aria-pressed", String(state.active.has(label)));
+
+      const name = document.createTextNode(labelName(label));
+      const n = document.createElement("span");
+      n.className = "n";
+      n.textContent = count;
+      chip.append(name, n);
+
+      chip.addEventListener("click", () => {
+        if (state.active.has(label)) state.active.delete(label);
+        else state.active.add(label);
+        chip.setAttribute("aria-pressed", String(state.active.has(label)));
+        renderText();
+        renderRows();
+      });
+      els.chips.append(chip);
+    }
+  }
+
+  function renderText() {
+    const visible = state.entities.filter((e) => e.valid && state.active.has(e.label));
+    const frag = document.createDocumentFragment();
+    let pos = 0;
+
+    for (const e of visible) {
+      if (e.start < pos) continue; // lewati span yang tumpang tindih
+      if (e.start > pos) frag.append(state.fullText.slice(pos, e.start));
+      const mark = document.createElement("mark");
+      mark.className = "ent";
+      mark.dataset.label = e.label;
+      mark.title = `${labelName(e.label)} (${e.start}–${e.end})`;
+      mark.textContent = state.fullText.slice(e.start, e.end);
+      frag.append(mark);
+      pos = e.end;
+    }
+    frag.append(state.fullText.slice(pos));
+    els.text.replaceChildren(frag);
+  }
+
+  function renderRows() {
+    const frag = document.createDocumentFragment();
+    for (const e of state.entities) {
+      if (!state.active.has(e.label)) continue;
+      const tr = document.createElement("tr");
+
+      const tdText = document.createElement("td");
+      tdText.textContent = e.text;
+
+      const tdLabel = document.createElement("td");
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      dot.dataset.label = e.label;
+      tdLabel.append(dot, labelName(e.label));
+
+      const tdPos = document.createElement("td");
+      tdPos.className = "pos";
+      tdPos.textContent = `${e.start}–${e.end}`;
+
+      tr.append(tdText, tdLabel, tdPos);
+      frag.append(tr);
+    }
+    els.rows.replaceChildren(frag);
+  }
+
+  /* ---------- Event ---------- */
+
+  els.title.addEventListener("input", updateCounts);
+  els.body.addEventListener("input", updateCounts);
+  els.analyze.addEventListener("click", analyze);
+  els.clear.addEventListener("click", clearAll);
+
+  document.querySelectorAll("[data-sample]").forEach((btn) => {
+    btn.addEventListener("click", () => loadSample(btn.dataset.sample));
   });
 
-  function displayResults(data) {
-    emptyState.classList.add("hidden");
-    metaBadges.classList.remove("hidden");
-    filterWrapper.classList.remove("hidden");
-    highlightWrapper.classList.remove("hidden");
-    tableWrapper.classList.remove("hidden");
-    jsonWrapper.classList.remove("hidden");
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") analyze();
+  });
 
-    badgeCount.textContent = `${data.meta.entity_count} Entitas Ditemukan`;
-    badgeModel.textContent = `Model: ${data.meta.model}`;
-    badgeChars.textContent = `${data.meta.char_count} Karakter`;
-
-    jsonCode.textContent = JSON.stringify(data, null, 2);
-
-    renderTable();
-    renderHighlights();
-  }
-
-  function getBadgeClass(label) {
-    const valid = ["PERSON", "ORG", "GPE", "LOC", "DATE", "EVENT", "NORP", "MONEY"];
-    return valid.includes(label) ? `tag-${label}` : "tag-DEFAULT";
-  }
-
-  function renderTable() {
-    tableBody.innerHTML = "";
-    const filtered = activeFilter === "ALL" 
-      ? currentEntities 
-      : currentEntities.filter(ent => ent.label === activeFilter);
-
-    tableCountLabel.textContent = `Menampilkan ${filtered.length} dari ${currentEntities.length} entitas`;
-
-    if (filtered.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color:#64748b;">Tidak ada entitas yang sesuai dengan filter '${activeFilter}'.</td></tr>`;
-      return;
-    }
-
-    filtered.forEach(ent => {
-      const tr = document.createElement("tr");
-      const badgeClass = getBadgeClass(ent.label);
-
-      tr.innerHTML = `
-        <td><strong>${escapeHtml(ent.text)}</strong></td>
-        <td><span class="tag-badge ${badgeClass}">${escapeHtml(ent.label)}</span></td>
-        <td><code>${ent.start}</code></td>
-        <td><code>${ent.end}</code></td>
-      `;
-      tableBody.appendChild(tr);
-    });
-  }
-
-  function renderHighlights() {
-    if (!currentEntities || currentEntities.length === 0) {
-      highlightBox.textContent = currentFullText;
-      return;
-    }
-
-    const filtered = activeFilter === "ALL"
-      ? currentEntities
-      : currentEntities.filter(ent => ent.label === activeFilter);
-
-    if (filtered.length === 0) {
-      highlightBox.textContent = currentFullText;
-      return;
-    }
-
-    // Sort spans by start offset ascending
-    const sorted = [...filtered].sort((a, b) => a.start - b.start);
-    let html = "";
-    let cursor = 0;
-
-    sorted.forEach(ent => {
-      if (ent.start >= cursor) {
-        html += escapeHtml(currentFullText.slice(cursor, ent.start));
-        const badgeClass = getBadgeClass(ent.label);
-        const entitySubstring = currentFullText.slice(ent.start, ent.end);
-        html += `<mark class="ent-mark ${badgeClass}" title="${ent.label}: [${ent.start}:${ent.end}]">${escapeHtml(entitySubstring)}<span class="ent-sub">${ent.label}</span></mark>`;
-        cursor = ent.end;
-      }
-    });
-
-    if (cursor < currentFullText.length) {
-      html += escapeHtml(currentFullText.slice(cursor));
-    }
-
-    highlightBox.innerHTML = html.replace(/\n\n/g, "<br><br>");
-  }
-
-  function escapeHtml(str) {
-    if (!str) return "";
-    const d = document.createElement("div");
-    d.textContent = str;
-    return d.innerHTML;
-  }
-});
+  updateCounts();
+  checkServer();
+})();
