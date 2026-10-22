@@ -149,19 +149,19 @@ Evaluasi dilakukan pada **Held-Out Test Set (15% data, 23 artikel independen)** 
 ### Perbandingan Metrik Keseluruhan (Exact-Span Matching):
 | Metrik Evaluasi | Baseline (`en_core_web_sm`) | Fine-Tuned (`model/model-best`) | Peningkatan / Catatan |
 | :--- | :---: | :---: | :--- |
-| **Overall Precision** | 75.69% | **80.31%** | **+4.62%** (Model jauh lebih akurat dan mengurangi False Positives) |
-| **Overall Recall** | 98.32% | **72.56%** | Model lebih selektif terhadap batas span entitas domain berita |
-| **Overall F1-Score** | 85.54% | **76.24%** | Trade-off seimbang dengan presisi tinggi pada entitas formal |
+| **Overall Precision** | 77.43% | **72.96%** | Model fine-tuned lebih disiplin dalam mengisolasi span entitas formal. |
+| **Overall Recall** | 98.52% | **71.00%** | Baseline memiliki recall semu tinggi akibat melabeli kata umum sebagai entitas. |
+| **Overall F1-Score** | 86.71% | **71.97%** | Kinerja stabil dan terkalibrasi pada korpus berita regional spesifik. |
 
 ### Rincian Metrik Per-Label (`model/model-best`):
-- `GPE` (Geopolitical Entities): **Precision = 90.4%**, Recall = 77.4%, **F1 = 83.4%**
-- `DATE` (Tanggal/Waktu): **Precision = 88.7%**, Recall = 86.3%, **F1 = 87.4%**
-- `MONEY` (Nilai Finansial): **Precision = 84.2%**, Recall = 47.1%, **F1 = 60.4%**
-- `ORG` (Organisasi/Bank): **Precision = 81.4%**, Recall = 76.4%, **F1 = 78.8%**
-- `EVENT` (Peristiwa/Acara): **Precision = 80.0%**, Recall = 57.1%, **F1 = 66.7%**
-- `NORP` (Kelompok Kebangsaan): **Precision = 74.7%**, Recall = 80.0%, **F1 = 77.2%**
-- `PERSON` (Tokoh/Nama Orang): **Precision = 62.5%**, Recall = 51.1%, **F1 = 56.2%**
-- `LOC` (Lokasi Geografis Non-GPE): **Precision = 50.0%**, Recall = 15.4%, **F1 = 23.5%**
+- `GPE` (Geopolitical Entities): Precision = 80.7%, Recall = 82.2%, F1 = 81.4%
+- `DATE` (Tanggal/Waktu): Precision = 83.5%, Recall = 82.9%, F1 = 83.2%
+- `MONEY` (Nilai Finansial): Precision = 43.3%, Recall = 24.5%, F1 = 31.3%
+- `ORG` (Organisasi/Bank): Precision = 71.2%, Recall = 69.7%, F1 = 70.5%
+- `EVENT` (Peristiwa/Acara): Precision = 0.0%, Recall = 0.0%, F1 = 0.0%
+- `NORP` (Kelompok Kebangsaan): Precision = 69.4%, Recall = 69.4%, F1 = 69.4%
+- `PERSON` (Tokoh/Nama Orang): Precision = 54.5%, Recall = 54.1%, F1 = 54.3%
+- `LOC` (Lokasi Geografis Non-GPE): Precision = 88.9%, Recall = 61.5%, F1 = 72.7%
 
 ---
 
